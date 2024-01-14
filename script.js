@@ -65,15 +65,19 @@ const valueGenerator = (angleValue) => {
     if (angleValue >= i.minDegree && angleValue <= i.maxDegree) {
       finalValue.innerHTML = `<p>Value: ${i.value}</p>`;
       spinBtn.disabled = false;
-      break;
-    }
-  }
+      return;
+    } 
+  };
+  finalValue.innerHTML = `You've landed on the line, spin again!`;
+  spinBtn.disabled = false;
+
+
 };
 
 //Spinner count
 let count = 0;
-//100 rotations for animation and last rotation for result
-let resultValue = 101;
+//60 rotations for animation and last rotation for result
+let resultValue = 15;
 //Start spinning
 spinBtn.addEventListener("click", () => {
     let arrayOfStrings = inputs.value.split(',')
@@ -84,7 +88,7 @@ spinBtn.addEventListener("click", () => {
     rotationValues = copyOfArrayOfStrings.reverse().map((string, i) => {
         return {
             minDegree: i * 360 / arrayOfStrings.length + 1,
-            maxDegree: i * 360 / arrayOfStrings.length + 1 + 360 / arrayOfStrings.length - 1,
+            maxDegree: i * 360 / arrayOfStrings.length + 360 / arrayOfStrings.length - 1,
             value: copyOfArrayOfStrings[i]
         }
     })
@@ -132,13 +136,15 @@ spinBtn.addEventListener("click", () => {
     //If rotation>360 reset it back to 0
     if (myChart.options.rotation >= 360) {
       count += 1;
-      resultValue -= 5;
+      resultValue -= 2;
       myChart.options.rotation = 0;
-    } else if (count > 15 && myChart.options.rotation == randomDegree) {
+      console.log(`count: ${count} resultValue: ${resultValue}`)
+    } else if (count > 6 && myChart.options.rotation == randomDegree || resultValue <= 0) {
       valueGenerator(randomDegree);
       clearInterval(rotationInterval);
+      console.log(`end-count: ${count} end-resultValue: ${resultValue}`)
       count = 0;
-      resultValue = 101;
+      resultValue = 15;
     }
   }, 10);
 });
